@@ -1,0 +1,1 @@
+# puppet-jira-confluence
