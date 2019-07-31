@@ -1,0 +1,105 @@
+<Server port="8000" shutdown="SHUTDOWN" debug="0">
+    <Service name="Tomcat-Standalone">
+        <Connector port="<%= @tomcat_port %>"
+                   minProcessors="5"
+                   maxProcessors="75"
+                   useURIValidationHack="false"
+                   connectionTimeout="20000"
+                   maxThreads="<%= @tomcat_max_threads %>"
+                   minSpareThreads="10"
+                   enableLookups="false"
+                   acceptCount="<%= @tomcat_accept_count %>"
+                   debug="0"
+                   URIEncoding="UTF-8"
+                   protocol="org.apache.coyote.http11.Http11NioProtocol"
+          <% if @tomcat_native_ssl && @tomcat_redirect_https_port -%>
+                  redirectPort="<%= @tomcat_redirect_https_port %>"
+          <% else -%>
+                  redirectPort="<%= @tomcat_https_port%>"
+          <% end -%>
+
+          <% if @tomcat_proxy -%>
+          <%   @tomcat_proxy.sort.each do |key,value| -%>
+                             <%= key %>=<%= "\"#{value}\"" %>
+          <%   end -%>
+          <% end -%> 
+          />
+
+          <% if @ajp and ! @ajp.empty? -%>
+                  <Connector enableLookups="false" URIEncoding="UTF-8"
+          <%   @ajp.sort.each do |key, value| -%>
+                             <%= key %> = <%= "\"#{value}\"" %>
+          <%   end -%>
+                  />
+          <% end -%>
+
+        <Engine name="Standalone" defaultHost="localhost" debug="0">
+
+            <Host name="localhost" debug="0" appBase="webapps" unpackWARs="true" autoDeploy="false">
+
+                <Context path="<%= @context_path %>" docBase="../confluence" debug="0" reloadable="false" useHttpOnly="true">
+                    <!-- Logger is deprecated in Tomcat 5.5. Logging configuration for Confluence is specified in confluence/WEB-INF/classes/log4j.properties -->
+                    <Manager pathname="" />
+                    <Valve className="org.apache.catalina.valves.StuckThreadDetectionValve" threshold="60" />
+                </Context>
+            </Host>
+            <%- if @tomcat_log_dir -%>
+                <Valve className="org.apache.catalina.valves.AccessLogValve" resolveHosts="false" directory="<%= @tomcat_log_dir %>"
+                   pattern="<%= @tomcat_accesslog_format %>"/>
+            <% else -%>
+                <Valve className="org.apache.catalina.valves.AccessLogValve" resolveHosts="false" 
+                   pattern="<%= @tomcat_accesslog_format %>"/>
+            <%- end -%>
+        </Engine>
+
+        <!--
+            To run Confluence via HTTPS:
+             * Uncomment the Connector below
+             * Execute:
+                 %JAVA_HOME%\bin\keytool -genkey -alias tomcat -keyalg RSA (Windows)
+                 $JAVA_HOME/bin/keytool -genkey -alias tomcat -keyalg RSA  (Unix)
+               with a password value of "changeit" for both the certificate and the keystore itself.
+             * Restart and visit https://localhost:8443/
+
+             For more info, see http://confluence.atlassian.com/display/DOC/Adding+SSL+for+Secure+Logins+and+Page+Security
+        -->
+<!--
+        <Connector port="8443" maxHttpHeaderSize="8192"
+                   maxThreads="150" minSpareThreads="25" maxSpareThreads="75"
+                   enableLookups="false" disableUploadTimeout="true"
+                   acceptCount="100" scheme="https" secure="true"
+                   clientAuth="false" sslProtocol="TLS" SSLEnabled="true"
+                   URIEncoding="UTF-8" keystorePass="<MY_CERTIFICATE_PASSWORD>"/>
+-->
+        
+    <% if @tomcat_native_ssl -%>
+            <Connector  port="<%= @tomcat_https_port %>"
+                        protocol="org.apache.coyote.http11.Http11Protocol"
+                        <%- if @tomcat_address -%>
+                        address="<%= @tomcat_address %>"
+                        <%- end -%>
+                        maxHttpHeaderSize="<%= @tomcat_max_http_header_size %>"
+                        SSLEnabled="true"
+                        URIEncoding="UTF-8"
+                        maxThreads="<%= @tomcat_max_threads %>"
+                        minSpareThreads="<%= @tomcat_min_spare_threads %>"
+                        maxSpareThreads="75"
+                        enableLookups="<%= @tomcat_enable_lookups %>"
+                        disableUploadTimeout="<%= @tomcat_disable_upload_timeout %>"
+                        acceptCount="<%= @tomcat_accept_count %>"
+                        scheme="https"
+                        secure="true"
+                        keystoreFile="<%= @tomcat_keystore_file %>"
+                        keystorePass="<%= @tomcat_keystore_pass %>"
+                        keystoreType="<%= @tomcat_keystore_type %>"
+                        clientAuth="false"
+                        connectionTimeout="20000"
+                        <%- if @tomcat_key_alias -%>
+                        keyAlias="<%= @tomcat_key_alias %>"
+                        <%- end -%>
+                        sslProtocol="TLS"
+                        useBodyEncodingForURI="true"
+                        />
+    <% end -%>
+    </Service>
+</Server>

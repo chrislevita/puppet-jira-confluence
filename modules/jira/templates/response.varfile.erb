@@ -1,0 +1,13 @@
+#install4j response file for JIRA
+rmiPort$Long=8005
+app.jiraHome=<%= scope.lookupvar('jira::homedir_escaped')%>
+app.install.service$Boolean=true
+sys.confirmedUpdateInstallationString=false
+sys.programGroupAllUsers$Boolean=true
+sys.languageId=en
+sys.installationDir=<%= scope.lookupvar('jira::installdir_escaped')%>
+sys.programGroupName=<%= scope.lookupvar('jira::product').upcase%>
+executeLauncherAction$Boolean=true
+httpPort$Long=<%= scope.lookupvar('jira::tomcat_port')%>
+portChoice=default
+launch.application$Boolean=false

@@ -1,0 +1,13 @@
+#install4j response file for confluence
+rmiPort$Long=8005
+app.confluenceHome=<%= scope.lookupvar('confluence::homedir_escaped')%>
+app.install.service$Boolean=true
+sys.confirmedUpdateInstallationString=false
+sys.programGroupAllUsers$Boolean=true
+sys.languageId=en
+sys.installationDir=<%= scope.lookupvar('confluence::installdir_escaped')%>
+sys.programGroupName=<%= scope.lookupvar('confluence::product').upcase%>
+executeLauncherAction$Boolean=true
+httpPort$Long=<%= scope.lookupvar('confluence::tomcat_port')%>
+portChoice=default
+launch.application$Boolean=false

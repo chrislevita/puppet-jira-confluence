@@ -1,0 +1,75 @@
+
+------------------------------
+Coding
+	Server log
+	# notice("The value is: ${installdirtreearray}")
+	Agent log
+	# notify{"The value is: ${installdirtreearray}": }
+
+------------------------------
+PE console
+	homedir = "F:\\\\Atlassian\\\\Application-Data\\\\JIRA"
+	tomcat_log_dir = "F:\\\\Atlassian\\\\JIRA-Tomcat-Logs"
+
+------------------------------
+How to use puppet serverless
+	Install the puppet agent 
+	copy env to: C:\ProgramData\PuppetLabs\code\environments\
+	on the site.pp add your module
+	Run this cmd to test: puppet apply -t --debug --noop  --environment production C:\ProgramData\PuppetLabs\code\environments\staging\manifests\site.pp
+
+	puppet agent -t --debug --noop
+	puppet resource package
+
+===============================================================================
+##*********##
+#	JIRA	#
+##*********##
+TODO 
+	add disable notifications
+	$disable_notifications = false,
+	++JvmOptions "-Datlassian.mail.senddisabled=true; -Datlassian.mail.fetchdisabled=true; -Datlassian.mail.popdisabled=true"
+
+	Puppet code set permission to administrators  group and not admin user
+
+	install.pp
+	ln 54 move conf out
+
+	PE console, basic jira settings
+
+	version  
+	product      
+	installdir   
+	homedir      
+	jvm_xms     
+	jvm_xmx     
+	dbpassword
+	dbserver
+	dbname
+	dbport
+	*dbdriver  
+	dbtype
+	tomcat_log_dir 
+	tomcat_redirect_https_port
+	*disable_notifications
+	tomcat_native_ssl
+	tomcat_redirect_https_port
+
+	tomcat_key_alias
+	tomcat_keystore_file
+	tomcat_keystore_pass
+	tomcat_keystore_type
+
+Send logs to specific path, more details on the CHRIS JIRA-CF standard file
+
+===============================================================================
+##*************##
+#	Confluence	#
+##*************##
+Add disable notifications
+Add db config
+Maybe add confluence.cfg.<DB type>.xml.erb - a bit more complex as we need to have the buildNumber and Server id beforehand
+- Conf build info https://developer.atlassian.com/confdev/development-resources/confluence-build-information
+Add Synchorny integration
+- Add sychrony Memory
+Send logs to specific path, more details on the CHRIS JIRA-CF standard file
